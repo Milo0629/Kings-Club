@@ -456,6 +456,7 @@ $('services').append(card);
 
 }
 
+
 const {data:eligible,error:loErr}=await sb.from('services')
   .select('id')
   .eq('client_id',link.client_id)
@@ -478,18 +479,6 @@ if(!loErr){
     $('loyaltyText').textContent=
       credits+' de 3 servicios participantes para tu próximo lavado premium gratis.';
   }
-}=await sb.from('services')
-
-.select('id').eq('client_id',link.client_id).eq('loyalty_eligible',true);
-
-if(!loErr){
-
-const credits=(eligible||[]).length%3;
-
-$('loyaltyDots').querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i<credits));
-
-$('loyaltyText').textContent=credits+' de 3 servicios participantes para tu próximo abrillantado de cortesía.';
-
 }
 
 const {data:recs,error:re}=await sb.from('inspection_recommendations')
