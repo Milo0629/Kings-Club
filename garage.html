@@ -220,7 +220,7 @@ button.secondary{background:#1a2c2e;color:var(--white);border:1px solid #315456}
 
 <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
 
-<div><div class="eyebrow">Programa de lealtad</div><h3 style="margin:5px 0">3 servicios participantes = abrillantado gratis</h3></div><span style="font-size:30px">♛</span>
+<div><div class="eyebrow">Programa de lealtad</div><h3 style="margin:5px 0">3 servicios participantes = lavado premium gratis</h3></div><span style="font-size:30px">♛</span>
 
 </div>
 
@@ -457,6 +457,28 @@ $('services').append(card);
 }
 
 const {data:eligible,error:loErr}=await sb.from('services')
+  .select('id')
+  .eq('client_id',link.client_id)
+  .eq('loyalty_eligible',true);
+
+if(!loErr){
+  const total=(eligible||[]).length;
+  const credits=total%3;
+  const rewardReady=total>0 && credits===0;
+  const shownCredits=rewardReady?3:credits;
+
+  $('loyaltyDots').querySelectorAll('.dot').forEach((d,i)=>
+    d.classList.toggle('on',i<shownCredits)
+  );
+
+  if(rewardReady){
+    $('loyaltyText').textContent=
+      '¡Felicidades! Completaste 3 servicios participantes. Tu lavado premium gratis está listo para validación con WrappKing Atelier.';
+  }else{
+    $('loyaltyText').textContent=
+      credits+' de 3 servicios participantes para tu próximo lavado premium gratis.';
+  }
+}=await sb.from('services')
 
 .select('id').eq('client_id',link.client_id).eq('loyalty_eligible',true);
 
